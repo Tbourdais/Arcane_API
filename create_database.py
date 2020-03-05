@@ -1,16 +1,13 @@
-"""
-Created on Thu Mar  5 18:43:20 2020
-
-@author: tbour
-"""
-
-"""
-Create a MongoDB database to test the API.
-"""
-
 import pandas as pd
 from random import randint, choice, choices
-from datetime import date
+from datetime import datetime
+from pymongo import MongoClient
+
+
+"""
+________________________ DATA FOR THE DATABASE CREATION _______________________
+
+"""
 
 # Number of names and first names to consider when generating names.
 n = 10000
@@ -26,10 +23,15 @@ cities = ['Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes',
           'Montpellier', 'Strasbourg', 'Bordeaux', 'Lille', 'Rennes',
           'Reims', 'Saint-Etienne', 'Le Havre', 'Toulon']
 
-
+# 
 real_estate = ['Appartement', 'Maison']
 
 room = ['Chambre', 'Salle de bain', 'Cuisine', 'Salle à manger', 'Salon']
+
+"""
+____________________ FUNCTIONS TO GENERATE REAL ESTATE DATA ___________________
+
+"""
 
 def generate_date():
     """
@@ -44,7 +46,7 @@ def generate_date():
         day = randint(1, 28)
     else:
         day = randint(1, 30)
-    return date(year, month, day)
+    return datetime(year, month, day)
     
     
 def generate_user():
@@ -95,7 +97,8 @@ def generate_estate(user):
     """
     Random estate.
     Generate a random estate (estate type, rooms organisation, city...). The
-    owner name is the same name as the user.
+    owner name is the same name as the user. The 'owner_id' field is the
+    owner '_id' in the MongoDB database.
     """
     estate_type = choice(real_estate)
     city = choice(cities)
@@ -107,6 +110,7 @@ def generate_estate(user):
         estate_type = 'Appartement'
     description = generate_description(rooms_orga, estate_type, city)
     estate = {'owner': user['first_name'] + ' ' + user['last_name'],
+              'owner_id': user['_id'],
               'estate_type': estate_type,
               'city': city,
               'rooms': rooms_orga,
@@ -114,5 +118,27 @@ def generate_estate(user):
             }
     return estate
 
+"""
+_______________________________ MONGODB DATABASE ______________________________
+
+"""
+
+def database(n_examples=1000):
+    """
+    MongoBB database with random examples.
+    Generate the test MongoBD database.
+    """
+    client = MongoClient('mongodb://localhost:27017/')
+    db = client.test_database
+    for i in range(n_examples):
+        user = generate_user()
+        # Adding the user to the data base => Creation of a unique _id
+        db.users.insert_one(user)
+        # The same user can have many real estate
+        nb = randint(1,3) 
+        for r_e in range(nb):
+            real_estate = generate_estate(user)
+            db.real_estates.insert_one(real_estate)
+        
 
 
