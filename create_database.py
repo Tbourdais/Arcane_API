@@ -39,7 +39,7 @@ def generate_date():
     Generate a random birthdate between 1950 and 2000.
     """
     year = randint(1950, 2000)
-    month = randint(1, 13)
+    month = randint(1, 12)
     if month in [1, 3, 5, 7, 8, 10, 12]:
         day = randint(1, 31)
     elif month==2:
@@ -129,7 +129,10 @@ def database(n_examples=1000):
     Generate the test MongoBD database.
     """
     client = MongoClient('mongodb://localhost:27017/')
-    db = client.test_database
+    db = client.test_database   
+    # Cleaning the data base if the code has already been executed
+    db.users.remove({})
+    db.real_estates.remove({})  
     for i in range(n_examples):
         user = generate_user()
         # Adding the user to the data base => Creation of a unique _id
@@ -139,6 +142,7 @@ def database(n_examples=1000):
         for r_e in range(nb):
             real_estate = generate_estate(user)
             db.real_estates.insert_one(real_estate)
+
         
 
 
