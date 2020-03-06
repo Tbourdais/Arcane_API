@@ -15,7 +15,7 @@ def add_user():
     """
     new_user = request.get_json(force=True)
     db.users.insert_one(new_user)
-    return "User successfully added."
+    return "User successfully added.", 200
 
 @app.route('/users/<user_id>', methods=['POST'])
 def update_user(user_id):
@@ -29,7 +29,7 @@ def update_user(user_id):
     owner_name = user['first_name'] + ' ' + user['last_name']
     db.real_estates.update_many({'owner_id':ObjectId(user_id)},
                                  {'$set': {'owner' : owner_name}})
-    return "User info successfully updated."
+    return "User info successfully updated.", 200
 
 @app.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -38,7 +38,7 @@ def delete_user(user_id):
     """
     db.users.delete_one({'_id':ObjectId(user_id)})
     db.real_estates.delete_many({'owner_id':ObjectId(user_id)})
-    return "User successfully deleted."
+    return "User successfully deleted.", 200
 
 @app.route('/real_estate/<user_id>', methods=['POST'])
 def add_estate(user_id):
@@ -48,7 +48,7 @@ def add_estate(user_id):
     real_estate = request.get_json()
     real_estate['owner_id'] = ObjectId(user_id)
     db.real_estates.insert_one(real_estate)
-    return "Real estate successfuly added"
+    return "Real estate successfuly added", 200
     
 @app.route('/real_estate/<user_id>/<estate_id>', methods=['POST'])
 def update_estate(user_id, estate_id):
@@ -60,9 +60,9 @@ def update_estate(user_id, estate_id):
     if user_id == str(real_estate['owner_id']):
         db.real_estates.update_one({'_id' : ObjectId(estate_id)},
                                    {'$set': data}, upsert=False)
-        return "Real estate info successfully updated"
+        return "Real estate info successfully updated", 200
     else:
-        return "You're not allowed to modify this estate."
+        return "You're not allowed to modify this estate.", 405
 
 @app.route('/real_estate/<user_id>/<estate_id>', methods=['DELETE'])
 def delete_estate(user_id, estate_id):
@@ -72,9 +72,9 @@ def delete_estate(user_id, estate_id):
     real_estate = db.real_estates.find_one({'_id' : ObjectId(estate_id)})
     if user_id == str(real_estate['owner_id']):
         db.real_estates.delete_one({'_id' : ObjectId(estate_id)})
-        return "Real estate successfully deleted."
+        return "Real estate successfully deleted.", 200
     else:
-        return "You're not allowed to delete this estate."
+        return "You're not allowed to delete this estate.", 405
         
 @app.route('/real_estate/<city>', methods=['GET'])
 def get_estate(city):
@@ -87,7 +87,7 @@ def get_estate(city):
         del estate['_id']
         key = 'estate_' + str(i)
         result[key] = estate
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 
