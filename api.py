@@ -1,6 +1,7 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/test_database'
@@ -25,7 +26,7 @@ def update_user(user_id):
     db.users.update_one({'_id':ObjectId(user_id)},
                          {'$set' : data}, upsert=False)
     user = db.users.find_one({'_id':ObjectId(user_id)})
-    owner_name = user['first_name'] + user['last_name']
+    owner_name = user['first_name'] + ' ' + user['last_name']
     db.real_estates.update_many({'owner_id':ObjectId(user_id)},
                                  {'$set': {'owner' : owner_name}})
     return "User info successfully updated."
@@ -54,7 +55,19 @@ def update_estate(user_id, estate_id):
     else:
         return "You're not allowed to modify this estate."
 
-
+@app.route('/users/<city>', methods=['GET'])
+def get_estate(city):
+    """
+    Return all the real estates in a given city.
+    """
+    result = {}
+    for i, estate in enumerate(db.real_estates.find({'city':city})):
+        del estate['owner_id']
+        del estate['_id']
+        key = 'estate_' + str(i)
+        result[key] = estate
+    return jsonify(result)
+    
 
 if __name__ == '__main__':
     app.run(debug=False)
