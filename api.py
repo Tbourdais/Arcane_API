@@ -64,7 +64,18 @@ def update_estate(user_id, estate_id):
     else:
         return "You're not allowed to modify this estate."
 
-
+@app.route('/real_estate/<user_id>/<estate_id>', methods=['DELETE'])
+def delete_estate(user_id, estate_id):
+    """
+    Delete the real estate if user_id corresponds to owner_id.
+    """
+    real_estate = db.real_estates.find_one({'_id' : ObjectId(estate_id)})
+    if user_id == str(real_estate['owner_id']):
+        db.real_estates.delete_one({'_id' : ObjectId(estate_id)})
+        return "Real estate successfully deleted."
+    else:
+        return "You're not allowed to delete this estate."
+        
 @app.route('/real_estate/<city>', methods=['GET'])
 def get_estate(city):
     """
