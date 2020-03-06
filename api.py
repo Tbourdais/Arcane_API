@@ -31,7 +31,16 @@ def update_user(user_id):
                                  {'$set': {'owner' : owner_name}})
     return "User info successfully updated."
 
-@app.route('/users/<user_id>', methods=['POST'])
+@app.route('/users/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    """
+    Delete a user from the database, along with all his/her real estates.
+    """
+    db.users.delete_one({'_id':ObjectId(user_id)})
+    db.real_estates.delete_many({'owner_id':ObjectId(user_id)})
+    return "User successfully deleted."
+
+@app.route('/real_estate/<user_id>', methods=['POST'])
 def add_estate(user_id):
     """
     Add a real estate to the user.
@@ -41,7 +50,7 @@ def add_estate(user_id):
     db.real_estates.insert_one(real_estate)
     return "Real estate successfuly added"
     
-@app.route('/users/<user_id>/<estate_id>', methods=['POST'])
+@app.route('/real_estate/<user_id>/<estate_id>', methods=['POST'])
 def update_estate(user_id, estate_id):
     """
     Modify the real estate if user_id matches the owner_id of the real estate.
@@ -55,7 +64,8 @@ def update_estate(user_id, estate_id):
     else:
         return "You're not allowed to modify this estate."
 
-@app.route('/users/<city>', methods=['GET'])
+
+@app.route('/real_estate/<city>', methods=['GET'])
 def get_estate(city):
     """
     Return all the real estates in a given city.
@@ -67,7 +77,8 @@ def get_estate(city):
         key = 'estate_' + str(i)
         result[key] = estate
     return jsonify(result)
-    
+
+
 
 if __name__ == '__main__':
     app.run(debug=False)
