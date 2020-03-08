@@ -2,12 +2,12 @@ from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
+#database(1000) #decomment if you want to generate a test database
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/test_database'
 mongo = PyMongo(app)
 db = mongo.db
-    
 @app.route('/users/', methods=['POST'])
 def add_user():
     """
@@ -17,7 +17,7 @@ def add_user():
     db.users.insert_one(new_user)
     return "User successfully added.", 200
 
-@app.route('/users/<user_id>', methods=['POST'])
+@app.route('/users/<user_id>', methods=['PUT'])
 def update_user(user_id):
     """
     Update the user info
@@ -50,7 +50,7 @@ def add_estate(user_id):
     db.real_estates.insert_one(real_estate)
     return "Real estate successfuly added", 200
     
-@app.route('/real_estate/<user_id>/<estate_id>', methods=['POST'])
+@app.route('/real_estate/<user_id>/<estate_id>', methods=['PUT'])
 def update_estate(user_id, estate_id):
     """
     Modify the real estate if user_id matches the owner_id of the real estate.
