@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from create_database import database
 
 #database(1000) #decomment if you want to generate a test database
 
