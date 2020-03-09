@@ -9,14 +9,11 @@ ________________________ DATA FOR THE DATABASE CREATION _______________________
 
 """
 
-# Number of names and first names to consider when generating names.
-n = 10000
-
 # n most popular first and last name in France
 first_name = pd.read_csv('prenom.csv').sort_values('sum', ascending=False)
 last_name = pd.read_csv('patronymes.csv').sort_values('count', ascending=False)
-f_name = first_name['prenom'].values[:n]
-l_name = last_name['patronyme'].values[:n]
+f_name = first_name['prenom'].values[:10000]
+l_name = last_name['patronyme'].values[:10000]
 
 # The fifteen most populated cities in France
 cities = ['Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes',
@@ -58,8 +55,9 @@ def generate_user():
     user = {}
     user['first_name'] = choice(f_name)
     user['last_name'] = choice(l_name)
-    user['birthdate'] = generate_date()
+    user['birth_date'] = generate_date()
     return user
+
 
 def generate_rooms_orga(n_rooms):
     """
@@ -80,18 +78,18 @@ def generate_rooms_orga(n_rooms):
             estate[key] += 1
     return estate
 
-def generate_description(estate, estate_type, city):
+
+def generate_description(room_count, estate_type, city):
     """
     Random description.
     Generate a random description of the real estate.
     """
-    description = ""
-    description += estate_type + ' situé(e) à ' + city + ' comprenant '
-    for key in estate.keys():
-        if estate[key] != 0:
-            description += str(estate[key]) + ' ' + key + '(s), '
+    description = estate_type + ' situé(e) à ' + city + ' comprenant '
+    description.join(f'{room_count[key]} {key}(s) 'for key in room_count.keys()
+    if room_count[key] != 0)
     description = description[:-2] + '.'
     return description
+
 
 def generate_estate(user):
     """
