@@ -3,12 +3,13 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from create_database import database
 
-#database(5) #decomment if you want to generate a test database
+#database(1000) #decomment if you want to generate a test database
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/test_database'
 mongo = PyMongo(app)
 db = mongo.db
+
 @app.route('/users/', methods=['POST'])
 def add_user():
     """
