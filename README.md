@@ -29,7 +29,7 @@ Update the info of the real estate with *estate_id* if and only if *user_id* and
 
 ## Instructions
 
-1 - Download and install the MongoDB community server ([link]('https://www.mongodb.com/download-center/community')).  
+1 - Download and install the MongoDB community server ([link](https://www.mongodb.com/download-center/community)).  
 2 - Create a Python 3 environment with **Pandas**, **NumPy**, **PyMongo** and **Flask** installed.  
 3 - If you want to generate a test database, uncomment the line 6 in **api.py**.  
 4 - Run the **api.py** file in your Python environment. 
