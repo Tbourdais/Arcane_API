@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from datetime import datetime
 from create_database import database
+
 
 #database(1000) #decomment if you want to generate a test database
 
@@ -16,8 +18,12 @@ def add_user():
     Add a user to the database.
     """
     new_user = request.get_json(force=True)
+    date = new_user['birth_date']
+    day, month, year = int(date[:2]), int(date[3:5]), int(date[6:])
+    new_user['birth_date'] = datetime(year, month, day)
     db.users.insert_one(new_user)
     return "User successfully added.", 200
+
 
 @app.route('/users/<user_id>', methods=['PUT'])
 def update_user(user_id):
@@ -33,6 +39,7 @@ def update_user(user_id):
                                  {'$set': {'owner' : owner_name}})
     return "User info successfully updated.", 200
 
+
 @app.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     """
@@ -41,6 +48,7 @@ def delete_user(user_id):
     db.users.delete_one({'_id':ObjectId(user_id)})
     db.real_estates.delete_many({'owner_id':ObjectId(user_id)})
     return "User successfully deleted.", 200
+
 
 @app.route('/real_estates/<user_id>', methods=['POST'])
 def add_estate(user_id):
@@ -51,6 +59,7 @@ def add_estate(user_id):
     real_estate['owner_id'] = ObjectId(user_id)
     db.real_estates.insert_one(real_estate)
     return "Real estate successfuly added", 200
+
     
 @app.route('/real_estates/<user_id>/<estate_id>', methods=['PUT'])
 def update_estate(user_id, estate_id):
@@ -66,6 +75,7 @@ def update_estate(user_id, estate_id):
     else:
         return "You're not allowed to modify this estate.", 405
 
+
 @app.route('/real_estates/<user_id>/<estate_id>', methods=['DELETE'])
 def delete_estate(user_id, estate_id):
     """
@@ -77,6 +87,7 @@ def delete_estate(user_id, estate_id):
         return "Real estate successfully deleted.", 200
     else:
         return "You're not allowed to delete this estate.", 405
+
         
 @app.route('/real_estates/<city>', methods=['GET'])
 def get_estate(city):
