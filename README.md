@@ -3,7 +3,7 @@
 ## Database
 ### Database choice
 
-I had to work on a MongoDB database with PyMongo 3 weeks ago for an internship test, so I've decided to use this kind of database for the case study (I had also saw in Flask tutorials that MongoDB databases were quite straightforward to manage with Flask).
+I had to work on a MongoDB database with PyMongo 3 weeks ago for an internship test, so I've decided to use this kind of database for the case study (I had also seen in Flask tutorials that MongoDB databases were quite straightforward to manage with Flask).
 
 ### Database description
 
@@ -14,6 +14,9 @@ The database is composed of two collections :
 ## API
 
 I didn't comment too much the api.py file. Here are some precision on some the app routes.
+### /users/, PUSH
+
+Add a new user to the database. The birth date in the request is a string "dd/mm/yyyy" and is converted to a datetime.
 
 ### /users/<user_id>, PUT
 
