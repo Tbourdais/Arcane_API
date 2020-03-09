@@ -126,14 +126,16 @@ def get_estate(city):
     """
     Return all the real estates in a given city.
     """
-    result = {}
-    for i, estate in enumerate(db.real_estates.find({'city':city})):
-        del estate['owner_id']
-        del estate['_id']
-        key = 'estate_' + str(i)
-        result[key] = estate
-    return jsonify(result), 200
-
+    if (db.real_estates.find({'city':city}).count() > 0):
+        result = {}
+        for i, estate in enumerate(db.real_estates.find({'city':city})):
+            del estate['owner_id']
+            del estate['_id']
+            key = 'estate_' + str(i)
+            result[key] = estate
+        return jsonify(result), 200
+    else:
+        return f"No real estate in {city}.", 404
 
 
 if __name__ == '__main__':
