@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from create_database import database
 
-#database(1000) #decomment if you want to generate a test database
+#database(5) #decomment if you want to generate a test database
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/test_database'
@@ -41,17 +41,17 @@ def delete_user(user_id):
     db.real_estates.delete_many({'owner_id':ObjectId(user_id)})
     return "User successfully deleted.", 200
 
-@app.route('/real_estate/<user_id>', methods=['POST'])
+@app.route('/real_estates/<user_id>', methods=['POST'])
 def add_estate(user_id):
     """
-    Add a real estate to the user.
+    Add a real estate to the user (assuming owner's name is in the request).
     """
     real_estate = request.get_json()
     real_estate['owner_id'] = ObjectId(user_id)
     db.real_estates.insert_one(real_estate)
     return "Real estate successfuly added", 200
     
-@app.route('/real_estate/<user_id>/<estate_id>', methods=['PUT'])
+@app.route('/real_estates/<user_id>/<estate_id>', methods=['PUT'])
 def update_estate(user_id, estate_id):
     """
     Modify the real estate if user_id matches the owner_id of the real estate.
@@ -65,7 +65,7 @@ def update_estate(user_id, estate_id):
     else:
         return "You're not allowed to modify this estate.", 405
 
-@app.route('/real_estate/<user_id>/<estate_id>', methods=['DELETE'])
+@app.route('/real_estates/<user_id>/<estate_id>', methods=['DELETE'])
 def delete_estate(user_id, estate_id):
     """
     Delete the real estate if user_id corresponds to owner_id.
@@ -77,7 +77,7 @@ def delete_estate(user_id, estate_id):
     else:
         return "You're not allowed to delete this estate.", 405
         
-@app.route('/real_estate/<city>', methods=['GET'])
+@app.route('/real_estates/<city>', methods=['GET'])
 def get_estate(city):
     """
     Return all the real estates in a given city.
