@@ -17,13 +17,13 @@ def is_user(user_id):
     """
     Return True if user_id is in the database.
     """
-    return (db.users.find_one({"_id" : ObjectId(user_id)}) != None)
+    return (db.users.count_documents({"_id" : ObjectId(user_id)}) > 0)
 
 def is_estate(estate_id):
     """
     Return True if estate_id is in the database
     """
-    return (db.real_estates.find_one({"_id" : ObjectId(estate_id)}) != None)
+    return (db.real_estates.count_documents({"_id" : ObjectId(estate_id)}) > 0)
 
 @app.route('/users/', methods=['POST'])
 def add_user():
@@ -126,7 +126,7 @@ def get_estate(city):
     """
     Return all the real estates in a given city.
     """
-    if (db.real_estates.find({'city':city}).count() > 0):
+    if (db.real_estates.count_documents({'city':city}).count() > 0):
         result = {}
         for i, estate in enumerate(db.real_estates.find({'city':city})):
             del estate['owner_id']
