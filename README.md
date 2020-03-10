@@ -3,7 +3,7 @@
 ## Database
 ### Database choice
 
-I had to work on a MongoDB database with PyMongo 3 weeks ago for an internship test, so I've decided to use this kind of database for the case study (I had also seen in Flask tutorials that MongoDB databases were quite straightforward to manage with Flask).
+I had to work on a MongoDB database with PyMongo three weeks ago for an internship test, so I've decided to use this kind of database for the case study (I had also seen in Flask tutorials that MongoDB databases were quite straightforward to manage with Flask).
 
 ### Database description
 
@@ -34,5 +34,5 @@ Update the info of the real estate with *estate_id* if and only if *user_id* and
 
 1 - Download and install the MongoDB community server ([link](https://www.mongodb.com/download-center/community)).  
 2 - Create a Python 3 environment with **Pandas**, **NumPy**, **PyMongo** and **Flask** installed.  
-3 - If you want to generate a test database, uncomment the line 6 in **api.py**.  
+3 - If you want to generate a test database, uncomment the line 6 in **api.py** and set the number of users in *database()*.
 4 - Run the **api.py** file in your Python environment. 
